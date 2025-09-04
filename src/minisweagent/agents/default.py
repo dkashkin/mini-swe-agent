@@ -62,7 +62,7 @@ class DefaultAgent:
         self.env = env
         self.extra_template_vars = {}
         self.task_id = '' # for prompt tagging only
-        self.run_id = ''  # for prompt tagging only
+        self.run_id = kwargs.get('run_id', '')  # for prompt tagging only
         self.inference_id = 0 # used only to inject prompt tags
 
     def render_template(self, template: str, **kwargs) -> str:
@@ -76,7 +76,6 @@ class DefaultAgent:
         """Run step() until agent is finished. Return exit status & message"""
         self.extra_template_vars |= {"task": task, **kwargs}
         self.messages = []
-        self.run_id = kwargs.get('run_id', '')
         self.task_id = kwargs.get('task_id', '')
         if self.task_id: # abbreviate swebench task ids to save tokens
             self.task_id = self.task_id.split('-')[0][:2] + self.task_id.split('-')[-1]
