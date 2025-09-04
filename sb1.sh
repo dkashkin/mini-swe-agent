@@ -8,5 +8,5 @@ mini-extra swebench \
 --workers 1 \
 --filter "django__django-12155" \
 --environment-class docker \
---output "/home/jupyter/miniout" \
+--output "out" \
 --redo-existing 
