@@ -77,6 +77,8 @@ class DefaultAgent:
         self.messages = []
         self.run_id = kwargs.get('run_id', '')
         self.task_id = kwargs.get('task_id', '')
+        if self.task_id: # abbreviate swebench task ids to save tokens
+            self.task_id = self.task_id.split('-')[0][:2] + self.task_id.split('-')[-1]
         self.add_message("system", self.render_template(self.config.system_template))
         self.add_message("user", self.render_template(self.config.instance_template))
         while True:
