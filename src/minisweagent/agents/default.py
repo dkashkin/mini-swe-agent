@@ -25,8 +25,8 @@ class AgentConfig:
     )
     format_error_template: str = "Please always provide EXACTLY ONE action in triple backticks."
     action_observation_template: str = "Observation: {{output}}"
-    step_limit: int = 0
-    cost_limit: float = 3.0
+    step_limit: int = 300
+    cost_limit: float = 100
 
 
 class NonTerminatingException(Exception):
@@ -60,6 +60,8 @@ class DefaultAgent:
         self.model = model
         self.env = env
         self.extra_template_vars = {}
+        self.task_id = f"{kwargs.get('run_id', '')}{kwargs.get('task_id', '')}" # used only to inject prompt tags
+        self.inference_id = 0 # used only to inject prompt tags
 
     def render_template(self, template: str, **kwargs) -> str:
         template_vars = asdict(self.config) | self.env.get_template_vars() | self.model.get_template_vars()
@@ -91,7 +93,11 @@ class DefaultAgent:
         """Query the model and return the response."""
         if 0 < self.config.step_limit <= self.model.n_calls or 0 < self.config.cost_limit <= self.model.cost:
             raise LimitsExceeded()
-        response = self.model.query(self.messages)
+        # Inject a unique request tag at the end of SI without mutating self.messages
+        self.inference_id += 1
+        prompt_tag = f"<rqid>{self.task_id}{self.inference_id:02d}<rqid>"
+        messages_with_si_tag = [self.messages[0] + f"\n{prompt_tag}"] + self.messages[1:]
+        response = self.model.query(messages_with_si_tag)
         self.add_message("assistant", **response)
         return response
 
