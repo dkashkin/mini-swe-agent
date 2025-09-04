@@ -1,8 +1,10 @@
+mkdir -p out && 
+zip -rq out_backup_$(date +%m%d%y_%H%M).zip out && 
+rm -rf out/* &&
 mini-extra swebench \
---model claude-sonnet-4-20250514 \
+--model "vertex_ai/gemini-2.5-pro" \
 --subset verified \
 --split test \
---model "gemini/gemini-2.5-pro" \
 --workers 1 \
 --filter "sympy__sympy-24443" \
 --environment-class docker \
