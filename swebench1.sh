@@ -6,7 +6,7 @@ mini-extra swebench \
 --subset verified \
 --split test \
 --workers 1 \
---filter "sympy__sympy-24443" \
+--filter "django__django-12155" \
 --environment-class docker \
 --output "/home/jupyter/miniout" \
 --redo-existing 
