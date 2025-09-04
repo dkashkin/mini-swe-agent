@@ -148,6 +148,7 @@ def process_instance(
             progress_manager=progress_manager,
             instance_id=instance_id,
             **config.get("agent", {}),
+            run_id=config.get("run_id", "")
         )
         exit_status, result = agent.run(task, task_id=instance_id)
     except Exception as e:
@@ -239,6 +240,7 @@ def main(
         config.setdefault("model", {})["model_class"] = model_class
     if run_id is not None:
         config.setdefault("run_id", run_id)
+    logger.info(f"swebench run_id={run_id}")
 
     progress_manager = RunBatchProgressManager(len(instances), output_path / f"exit_statuses_{time.time()}.yaml")
 
