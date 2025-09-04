@@ -14,10 +14,16 @@ from tenacity import (
 )
 from typing import Any
 
-logging.basicConfig(filename='out/litellm.log', level=logging.DEBUG)
+class LogFilter(logging.Filter):
+    def filter(self, record):
+        message = record.getMessage()
+        return "RAW RESPONSE:" in message or "Request Sent from LiteLLM:" in message
+    
+# logging.basicConfig(filename='out/litellm.log', level=logging.DEBUG)
 litellm.set_verbose = True
 logger = logging.getLogger("litellm_model")
 logger.handlers = [logging.FileHandler('out/litellm.log')]
+logger.addFilter(LogFilter())
 logger.propagate = False 
 
 @dataclass
