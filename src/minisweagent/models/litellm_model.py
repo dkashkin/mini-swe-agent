@@ -14,12 +14,10 @@ from tenacity import (
 )
 from typing import Any
 
-logging.basicConfig(
-    filename='litellm.log',
-    level=logging.DEBUG,
-)
+logging.basicConfig(filename='out/litellm.log', level=logging.DEBUG)
 litellm.set_verbose = True
 logger = logging.getLogger("litellm_model")
+logger.handlers = [logging.FileHandler('out/litellm.log')]
 
 @dataclass
 class LitellmModelConfig:
