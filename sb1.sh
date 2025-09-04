@@ -10,4 +10,4 @@ mini-extra swebench \
 --environment-class docker \
 --output "out" \
 --redo-existing \
---run_id "R52"
+--run-id "R52"
