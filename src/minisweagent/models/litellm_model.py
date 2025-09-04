@@ -18,6 +18,7 @@ logging.basicConfig(filename='out/litellm.log', level=logging.DEBUG)
 litellm.set_verbose = True
 logger = logging.getLogger("litellm_model")
 logger.handlers = [logging.FileHandler('out/litellm.log')]
+logger.propagate = False 
 
 @dataclass
 class LitellmModelConfig:
