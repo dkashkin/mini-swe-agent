@@ -1,10 +1,9 @@
 mini-extra swebench \
---model claude-sonnet-4-20250514 \
 --subset verified \
 --split test \
---model "gemini/gemini-2.5-pro" \
---workers 1 \
---slice "0:1" \
+--model "vertex_ai/gemini-2.5-pro" \
+--workers 20 \
+--slice "0:100" \
 --environment-class docker \
 --output "~/miniout" \
 --redo-existing
