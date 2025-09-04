@@ -1,3 +1,6 @@
+mkdir -p out && 
+zip -rq out_backup_$(date +%m%d%y_%H%M).zip out && 
+rm -rf out/* &&
 mini-extra swebench \
 --subset verified \
 --split test \
@@ -6,5 +9,5 @@ mini-extra swebench \
 --shuffle True
 --slice "0:100" \
 --environment-class docker \
---output "/home/jupyter/miniout" \
+--output "out" \
 --redo-existing
