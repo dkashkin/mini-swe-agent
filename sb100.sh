@@ -10,5 +10,5 @@ mini-extra swebench \
 --environment-class docker \
 --output "out" \
 --redo-existing \
---run-id "R52" \
+--run-id "$1" \
 --shuffle True \

@@ -9,4 +9,4 @@ mini-extra swebench \
 --environment-class docker \
 --output "out" \
 --redo-existing \
---run-id "R54"
+--run-id "$1"
