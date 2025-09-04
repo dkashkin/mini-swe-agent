@@ -6,9 +6,9 @@ mini-extra swebench \
 --split test \
 --model "vertex_ai/gemini-2.5-pro" \
 --workers 100 \
---shuffle True
 --slice "0:100" \
 --environment-class docker \
 --output "out" \
 --redo-existing \
---run-id "R52"
+--run-id "R52" \
+--shuffle True \
