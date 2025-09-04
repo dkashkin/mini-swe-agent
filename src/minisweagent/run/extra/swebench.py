@@ -212,7 +212,14 @@ def main(
 
     dataset_path = DATASET_MAPPING.get(subset, subset)
     logger.info(f"Loading dataset {dataset_path}, split {split}...")
-    instances = list(load_dataset(dataset_path, split=split))
+
+    # Switching from original docker images to optimized by Epoch (requirex x86)
+    # instances = list(load_dataset(dataset_path, split=split))
+    ds = load_dataset(dataset_path, split=split)
+    instances = []
+    for item in ds:
+        item['image'] = f"ghcr.io/epoch-research/swe-bench.eval.x86_64.{item['instance_id']}"
+        instances.append(item)
 
     instances = filter_instances(instances, filter_spec=filter_spec, slice_spec=slice_spec, shuffle=shuffle)
     if not redo_existing and (output_path / "preds.json").exists():
