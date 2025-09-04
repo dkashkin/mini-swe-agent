@@ -10,4 +10,5 @@ mini-extra swebench \
 --slice "0:100" \
 --environment-class docker \
 --output "out" \
---redo-existing
+--redo-existing \
+--run-id "R52"
