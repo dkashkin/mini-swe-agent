@@ -1,11 +1,10 @@
 import json
+import litellm
 import logging
 import os
 from dataclasses import asdict, dataclass, field
+from minisweagent.models import GLOBAL_MODEL_STATS
 from pathlib import Path
-from typing import Any
-
-import litellm
 from tenacity import (
     before_sleep_log,
     retry,
@@ -13,11 +12,14 @@ from tenacity import (
     stop_after_attempt,
     wait_exponential,
 )
+from typing import Any
 
-from minisweagent.models import GLOBAL_MODEL_STATS
-
+logging.basicConfig(
+    filename='litellm.log',
+    level=logging.DEBUG,
+)
+litellm.set_verbose = True
 logger = logging.getLogger("litellm_model")
-
 
 @dataclass
 class LitellmModelConfig:
