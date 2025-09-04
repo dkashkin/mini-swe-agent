@@ -60,7 +60,8 @@ class DefaultAgent:
         self.model = model
         self.env = env
         self.extra_template_vars = {}
-        self.task_id = f"{kwargs.get('run_id', '')}{kwargs.get('task_id', '')}" # used only to inject prompt tags
+        self.task_id = '' # for prompt tagging only
+        self.run_id = ''  # for prompt tagging only
         self.inference_id = 0 # used only to inject prompt tags
 
     def render_template(self, template: str, **kwargs) -> str:
@@ -74,6 +75,8 @@ class DefaultAgent:
         """Run step() until agent is finished. Return exit status & message"""
         self.extra_template_vars |= {"task": task, **kwargs}
         self.messages = []
+        self.run_id = kwargs.get('run_id', '')
+        self.task_id = kwargs.get('task_id', '')
         self.add_message("system", self.render_template(self.config.system_template))
         self.add_message("user", self.render_template(self.config.instance_template))
         while True:
@@ -95,7 +98,7 @@ class DefaultAgent:
             raise LimitsExceeded()
         # Inject a unique request tag at the end of SI without mutating self.messages
         self.inference_id += 1
-        prompt_tag = f"\n<rqid>{self.task_id}{self.inference_id:02d}<rqid>"
+        prompt_tag = f"\n<rtag>{self.run_id}{self.task_id}{self.inference_id:02d}<rtag>"
         si_with_tag = self.messages[0].copy()
         si_with_tag["content"] = si_with_tag["content"] + prompt_tag
         response = self.model.query([si_with_tag] + self.messages[1:])
