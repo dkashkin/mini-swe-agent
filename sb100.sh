@@ -11,4 +11,4 @@ mini-extra swebench \
 --output "out" \
 --redo-existing \
 --run-id "$1" \
---shuffle True \
+--shuffle True
