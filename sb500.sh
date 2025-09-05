@@ -8,6 +8,6 @@ mini-extra swebench \
 --workers 20 \
 --environment-class docker \
 --output "out" \
---redo-existing \
 --run-id "$1" \
---shuffle True
+--redo-existing \
+--shuffle

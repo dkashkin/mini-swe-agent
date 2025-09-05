@@ -9,6 +9,6 @@ mini-extra swebench \
 --slice "0:100" \
 --environment-class docker \
 --output "out" \
---redo-existing \
 --run-id "$1" \
---shuffle True
+--redo-existing \
+--shuffle
