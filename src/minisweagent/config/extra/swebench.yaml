@@ -47,10 +47,6 @@ agent:
     Once you receive the output of this command, stop. There is no need to commit your code or send any additional messages to the User.
     </final_command>
 
-    <bug_description>
-    {{task}}
-    </bug_description>
-
   instance_template: |
     <bug_description>
     {{task}}
