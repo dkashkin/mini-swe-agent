@@ -38,7 +38,7 @@ def sample_simple_trajectory():
         {"role": "user", "content": "Command output here."},
         {
             "role": "assistant",
-            "content": "Now I'll finish.\n\n```bash\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n```",
+            "content": "Now I'll finish.\n\n```bash\necho BUG_FIX_COMPLETED\n```",
         },
     ]
 
@@ -58,7 +58,7 @@ def sample_swebench_trajectory():
             {"role": "user", "content": [{"type": "text", "text": "Please solve this issue."}]},
             {"role": "assistant", "content": "I'll analyze the issue.\n\n```bash\ncat file.py\n```"},
             {"role": "user", "content": [{"type": "text", "text": "File contents here."}]},
-            {"role": "assistant", "content": "Fixed!\n\n```bash\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n```"},
+            {"role": "assistant", "content": "Fixed!\n\n```bash\necho BUG_FIX_COMPLETED\n```"},
         ],
     }
 
@@ -110,7 +110,7 @@ async def test_trajectory_inspector_basic_navigation(temp_trajectory_files):
         await pilot.press("$")
         assert "Step 3/3" in app.title
         assert "MINI-SWE-AGENT" in get_screen_text(app)
-        assert "echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT" in get_screen_text(app)
+        assert "echo BUG_FIX_COMPLETED" in get_screen_text(app)
 
         # Navigate back to first step
         await pilot.press("0")

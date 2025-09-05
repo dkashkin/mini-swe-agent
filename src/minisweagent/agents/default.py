@@ -16,14 +16,14 @@ class AgentConfig:
     system_template: str = "You are a helpful assistant that can do anything."
     instance_template: str = (
         "Your task: {{task}}. Please reply with a single shell command in triple backticks. "
-        "To finish, the first line of the output of the shell command must be 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'."
+        "To finish, the first line of the output of the shell command must be 'BUG_FIX_COMPLETED'."
     )
     timeout_template: str = (
         "The last command <command>{{action['action']}}</command> timed out and has been killed.\n"
         "The output of the command was:\n <output>\n{{output}}\n</output>\n"
         "Please try another command and make sure to avoid those requiring interactive input."
     )
-    format_error_template: str = "Please always provide EXACTLY ONE action in triple backticks."
+    format_error_template: str = "Please provide EXACTLY ONE markdown block inside of the `bash_command` tag."
     action_observation_template: str = "Observation: {{output}}"
     step_limit: int = 300
     cost_limit: float = 100
@@ -116,7 +116,10 @@ class DefaultAgent:
 
     def parse_action(self, response: dict) -> dict:
         """Parse the action from the message. Returns the action."""
-        actions = re.findall(r"```bash\n(.*?)\n```", response["content"], re.DOTALL)
+        text = response["content"]
+        if '<bash_command>' in text: # Skip THOUGHT which can include markdown code blocks
+            text = text.split('<bash_command>')[-1]
+        actions = re.findall(r"```bash\n(.*?)\n```", text, re.DOTALL)
         if len(actions) == 1:
             return {"action": actions[0].strip(), **response}
         raise FormatError(self.render_template(self.config.format_error_template, actions=actions))
@@ -135,7 +138,7 @@ class DefaultAgent:
         return output
 
     def has_finished(self, output: dict[str, str]):
-        """Raises Submitted exception with final output if the agent has finished its task."""
+        """Raises Submitted exception with final output once the agent has finished its task."""
         lines = output.get("output", "").lstrip().splitlines(keepends=True)
-        if lines and lines[0].strip() in ["MINI_SWE_AGENT_FINAL_OUTPUT", "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT"]:
+        if lines and lines[0].strip() in ["MINI_SWE_AGENT_FINAL_OUTPUT", "BUG_FIX_COMPLETED"]:
             raise Submitted("".join(lines[1:]))

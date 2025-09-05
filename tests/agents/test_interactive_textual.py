@@ -63,8 +63,8 @@ async def test_everything_integration_test():
                 "THOUGHTT 4\n ```bash\necho '4'\n```",  # step 5
                 "THOUGHTT 5\n ```bash\necho '5'\n```",  # step 6
                 "THOUGHTT 6\n ```bash\necho '6'\n```",  # step 7
-                "FINISHING\n ```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
-                "FINISHING2\n ```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+                "FINISHING\n ```bash\necho 'BUG_FIX_COMPLETED'\n```",
+                "FINISHING2\n ```bash\necho 'BUG_FIX_COMPLETED'\n```",
             ],
         ),
         env=LocalEnvironment(),
@@ -165,7 +165,7 @@ async def test_everything_integration_test():
         # next action will be executed automatically, so we see step 6 next
         await pilot.pause(0.2)
         assert "Step 10/10" in app.title
-        assert "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'" in get_screen_text(app)
+        assert "echo 'BUG_FIX_COMPLETED'" in get_screen_text(app)
         # await pilot.pause(0.1)
         # assert "press enter" not in get_screen_text(app).lower()
         print(get_screen_text(app))
@@ -180,7 +180,7 @@ async def test_everything_integration_test():
         print(">>> Directly navigate to step 9")
         await pilot.press("$")
         assert "Step 10/10" in app.title
-        assert "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT" in get_screen_text(app)
+        assert "BUG_FIX_COMPLETED" in get_screen_text(app)
 
         print(">>> Give it a new task")
         assert "to give it a new task" in get_screen_text(app).lower()
@@ -256,7 +256,7 @@ async def test_log_message_filtering():
             outputs=[
                 "/warning Test warning message",
                 "Normal response",
-                "end: \n```bash\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n```",
+                "end: \n```bash\necho BUG_FIX_COMPLETED\n```",
             ]
         ),
         env=LocalEnvironment(),
@@ -280,7 +280,7 @@ async def test_list_content_rendering():
     # Create a model that will add messages with list content
     app = TextualAgent(
         model=DeterministicModel(
-            outputs=["Simple response\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```"]
+            outputs=["Simple response\n```bash\necho 'BUG_FIX_COMPLETED'\n```"]
         ),
         env=LocalEnvironment(),
         mode="yolo",
@@ -382,7 +382,7 @@ async def test_whitelist_actions_bypass_confirmation():
     """Test that whitelisted actions bypass confirmation."""
     app = TextualAgent(
         model=DeterministicModel(
-            outputs=["Whitelisted action\n```bash\necho 'safe' && echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```"]
+            outputs=["Whitelisted action\n```bash\necho 'safe' && echo 'BUG_FIX_COMPLETED'\n```"]
         ),
         env=LocalEnvironment(),
         mode="confirm",
@@ -405,7 +405,7 @@ async def test_input_container_multiple_actions():
         model=DeterministicModel(
             outputs=[
                 "First action\n```bash\necho '1'\n```",
-                "Second action\n```bash\necho '2' && echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+                "Second action\n```bash\necho '2' && echo 'BUG_FIX_COMPLETED'\n```",
             ]
         ),
         env=LocalEnvironment(),
@@ -437,7 +437,7 @@ def test_log_handler_cleanup():
 
     app = TextualAgent(
         model=DeterministicModel(
-            outputs=["Simple response\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```"]
+            outputs=["Simple response\n```bash\necho 'BUG_FIX_COMPLETED'\n```"]
         ),
         env=LocalEnvironment(),
         mode="yolo",
@@ -482,7 +482,7 @@ async def test_yolo_mode_confirms_pending_action():
     app = TextualAgent(
         model=DeterministicModel(
             outputs=[
-                "Action requiring confirmation\n```bash\necho 'test' && echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+                "Action requiring confirmation\n```bash\necho 'test' && echo 'BUG_FIX_COMPLETED'\n```",
             ]
         ),
         env=LocalEnvironment(),
