@@ -54,7 +54,7 @@ agent:
 
   action_observation_template: |
     <returncode>{{output.returncode}}</returncode>
-    {% if output.output | length < 10000 -%}
+    {% if output.output | length < 200000 -%}
     <output>
     {{ output.output -}}
     </output>
@@ -65,15 +65,15 @@ agent:
     - <output_tail> contains the last N lines of output
     The middle section has been omitted. If this causes problems please try changing the command so that it produces a shorter output.
     </warning>
-    {%- set elided_chars = output.output | length - 100000 -%}
+    {%- set elided_chars = output.output | length - 200000 -%}
     <output_head>
-    {{ output.output[:50000] }}
+    {{ output.output[:100000] }}
     </output_head>
     <elided_chars>
     {{ elided_chars }} characters skipped
     </elided_chars>
     <output_tail>
-    {{ output.output[-50000:] }}
+    {{ output.output[-100000:] }}
     </output_tail>
     {%- endif -%}
   format_error_template: |
