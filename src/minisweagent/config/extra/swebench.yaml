@@ -77,12 +77,7 @@ agent:
     </output_tail>
     {%- endif -%}
   format_error_template: |
-    Please always provide EXACTLY ONE bash command in a markdown code block, for example:
-    <example>
-    ```bash
-    <action>
-    ```
-    </example>
+    Your response must include one `<bash_command>` tag containing a single markdown code block that provides the bash command that you want me to execute.
   step_limit: 250
   cost_limit: 20.
 
