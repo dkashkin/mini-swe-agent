@@ -9,5 +9,4 @@ mini-extra swebench \
 --environment-class docker \
 --output "out" \
 --run-id "$1" \
---redo-existing \
 --shuffle
