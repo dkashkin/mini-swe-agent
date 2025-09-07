@@ -53,7 +53,8 @@ agent:
     </bug_description>
 
   action_observation_template: |
-    <returncode>{{output.returncode}}</returncode>
+    The last bash command produced the following exit code and output:
+    <exit_code>{{output.returncode}}</exit_code>
     {% if output.output | length < 200000 -%}
     <output>
     {{ output.output -}}

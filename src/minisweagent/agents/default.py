@@ -117,7 +117,7 @@ class DefaultAgent:
     def parse_action(self, response: dict) -> dict:
         """Parse the action from the message. Returns the action."""
         text = response["content"]
-        if '<bash_command>' in text: # Skip THOUGHT which can include markdown code blocks
+        if '<bash_command>' in text: # Skip the <reasonong> tag which can include markdown code blocks
             text = text.split('<bash_command>')[-1]
         actions = re.findall(r"```bash\n(.*?)\n```", text, re.DOTALL)
         if len(actions) == 1:
