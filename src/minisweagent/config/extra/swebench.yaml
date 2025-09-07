@@ -33,15 +33,15 @@ agent:
     </constraints>
 
     <response_format>
-    Your response must contain the following two sections enclosed in XML tags:
+    Your response must contain two parts enclosed in the following XML tags:
 
-    1. `<reasoning>`: this section contains a Markdown document with the following sections:
+    1. `<reasoning>`: this response part provides a Markdown document with the following sections:
 
       - "Last Command Results": analyze the exit code and output from the last command in the context of the session history.
       - "Plan Revision": Update the overall strategy based on the last command's outcome, especially if it produced an error or unexpected results.
       - "Next Command Rationale": Propose the optimal approach for the next command and justify your decision with a trade-off analysis against viable alternatives.
 
-    2. `<bash_command>`: this section must include one bash command that you want to execute next.
+    2. `<bash_command>`: this response part provides one bash command that you want to execute next.
     </response_format>
 
     <final_command>
@@ -53,7 +53,7 @@ agent:
     </final_command>
 
   instance_template: |
-    Please fix the issue described below. To help you debug, I have shell access to the server and can run any bash commands and send the results back to you.
+    Please fix the bug detailed below. I have shell access to the server where this project is installed. Send me any bash command and I will run it on this server and return the exit code and the output.
     <bug_description>
     {{task}}
     </bug_description>
