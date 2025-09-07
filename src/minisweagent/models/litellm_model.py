@@ -89,10 +89,10 @@ class LitellmModel:
         opening_tag = f"<reasoning>"
         closing_tag = f"</reasoning>"
         start_pos = text.find(opening_tag)
+        content_start = start_pos + len(opening_tag)
         end_pos = text.find(closing_tag, content_start)
         if start_pos < 0 or end_pos < 0 or start_pos > end_pos:
             return text, '', ''
-        content_start = start_pos + len(opening_tag)
         prefix = text[:content_start]
         reasoning = text[content_start:end_pos]
         suffix = text[end_pos:]
