@@ -33,10 +33,15 @@ agent:
     </constraints>
 
     <response_format>
-    Every response you provide must contain two XML tags:
+    Your response must contain two XML tags:
 
-    - `<reasoning>`: contains a markdown document with a detailed explanation of your analysis, your current hypothesis, your plan for the next steps, and the rationale for the specific command you are sending to the User.
-    - `<bash_command>`: includes one markdown code block with the bash command that should be executed next.
+    1. `<reasoning>`: this tag must contain a Markdown document with the following sections:
+
+      - "Last Command Results": analyze the exit code and output from the last command in the context of the session history.
+      - "Plan Revision": Update the overall strategy based on the last command's outcome, especially if it produced an error or unexpected results.
+      - "Next Command Rationale": Propose the optimal approach for the next command and justify your decision with a trade-off analysis against viable alternatives.
+
+    2. `<bash_command>`: includes one markdown code block with the bash command that should be executed next.
     </response_format>
 
     <final_command>
