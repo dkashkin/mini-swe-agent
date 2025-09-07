@@ -53,6 +53,7 @@ agent:
     </final_command>
 
   instance_template: |
+    Please fix the issue described below. To help you debug, I have shell access to the server and can run any bash commands and send the results back to you.
     <bug_description>
     {{task}}
     </bug_description>
