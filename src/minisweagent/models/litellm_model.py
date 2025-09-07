@@ -92,7 +92,7 @@ class LitellmModel:
         content_start = start_pos + len(opening_tag)
         end_pos = text.find(closing_tag, content_start)
         if start_pos < 0 or end_pos < 0 or start_pos > end_pos:
-            return text, '', ''
+            return text, ''
         reasoning = text[content_start:end_pos]
         return reasoning, text[end_pos + len(closing_tag):]
 
@@ -102,8 +102,8 @@ class LitellmModel:
         if content and hasattr(response.choices[0].message, "reasoning_content"):
             thought_summary = response.choices[0].message.reasoning_content
             reasoning, bash_command = self.split_reasoning(content or "")
-            if reasoning and len(reasoning) < len(thought_summary):
-                # replace the content of <reasoning> tag with native thought summaries
+            if reasoning and thought_summary and len(thought_summary) > len(reasoning):
+                # replace the content of the <reasoning> tag with the more robust thought summaries
                 return f"<reasoning>\n{thought_summary}\n</reasoning>\n{bash_command}"
         return content
 
