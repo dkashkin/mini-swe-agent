@@ -118,12 +118,15 @@ class DefaultAgent:
     def parse_action(self, response: dict) -> dict:
         """Parse the action from the message. Returns the action."""
         text = response["content"]
-        if '<bash_command>' in text: # Skip the <reasonong> tag which can include markdown code blocks
+        if '<bash_command>' in text: # Skip the <reasoning> tag which can include markdown code blocks
             text = text.split('<bash_command>')[-1]
         actions = re.findall(r"```bash\n(.*?)\n```", text, re.DOTALL)
-        if len(actions) == 1:
+        if not actions: 
+            return {"action": text.strip(), **response} # The entire content of <bash_command> is the command
+        elif len(actions) == 1: # bash command is wrapped in a markdown code block
             return {"action": actions[0].strip(), **response}
-        raise FormatError(self.render_template(self.config.format_error_template, actions=actions))
+        else: # Multiple markdown code blocks is not acceptable
+            raise FormatError(self.render_template(self.config.format_error_template, actions=actions))
 
     def execute_action(self, action: dict) -> dict:
         try:
