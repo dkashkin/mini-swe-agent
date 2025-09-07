@@ -120,6 +120,7 @@ class DefaultAgent:
         text = response["content"]
         if '<bash_command>' in text: # Skip the <reasoning> tag which can include markdown code blocks
             text = text.split('<bash_command>')[-1]
+        text = text.replace('</bash_command>', '').strip()
         actions = re.findall(r"```bash\n(.*?)\n```", text, re.DOTALL)
         if not actions: 
             return {"action": text.strip(), **response} # The entire content of <bash_command> is the command
