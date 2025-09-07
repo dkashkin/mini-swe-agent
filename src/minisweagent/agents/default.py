@@ -120,6 +120,8 @@ class DefaultAgent:
         text = response["content"]
         if '<bash_command>' in text: # Skip the <reasoning> tag which can include markdown code blocks
             text = text.split('<bash_command>')[-1]
+        else:  # The model failed to generate the required tag <bash_command>
+            raise FormatError(self.render_template(self.config.format_error_template, actions=actions))
         text = text.replace('</bash_command>', '').strip()
         actions = re.findall(r"```bash\n(.*?)\n```", text, re.DOTALL)
         if not actions: 
