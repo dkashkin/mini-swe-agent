@@ -58,7 +58,7 @@ agent:
     <bug_description>
     {{task}}
     </bug_description>
-    You must respond with a detailed explanation of your initial bug resolution strategy in the `<reasoning>` tag, and the first bash command in the `<bash_command>` tag.
+    You must respond with a detailed explanation of your initial bug resolution strategy enclosed in the `<reasoning></reasoning>` tag, and the first bash command in the `<bash_command></bash_command>` tag.
 
   action_observation_template: |
     The last bash command produced the following exit code and output:
