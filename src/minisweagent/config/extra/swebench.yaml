@@ -54,10 +54,11 @@ agent:
     </final_command>
 
   instance_template: |
-    Please resolve the issue described below. I have shell access to the Ubuntu server where this project is installed. Send me any bash command and I will run it on this server and send back the exit code and output.
+    Resolve the issue described below. I have shell access to the Ubuntu server where this project is installed. Send me any bash command and I will run it on this server and send back the exit code and output.
     <bug_description>
     {{task}}
     </bug_description>
+    Please respond with a detailed explanation of your initial bug resolution strategy in the `<reasoning>` tag, and the first bash command in the `<bash_command>` tag.
 
   action_observation_template: |
     The last bash command produced the following exit code and output:
