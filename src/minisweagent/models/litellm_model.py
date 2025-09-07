@@ -79,10 +79,35 @@ class LitellmModel:
             raise
         self.n_calls += 1
         self.cost += cost
-        GLOBAL_MODEL_STATS.add(cost)
+        has_thoughts = hasattr(response.choices[0].message, "reasoning_content") and len(response.choices[0].message.reasoning_content)
+        GLOBAL_MODEL_STATS.add(cost, has_thoughts)
         return {
-            "content": response.choices[0].message.content or "",  # type: ignore
+            "content": self.replace_reasoning_tag_with_thought_summaries(response)
         }
+
+    def split_reasoning(self, text) -> tuple[str, str, str]:
+        opening_tag = f"<reasoning>"
+        closing_tag = f"</reasoning>"
+        start_pos = text.find(opening_tag)
+        end_pos = text.find(closing_tag, content_start)
+        if start_pos < 0 or end_pos < 0 or start_pos > end_pos:
+            return text, '', ''
+        content_start = start_pos + len(opening_tag)
+        prefix = text[:content_start]
+        reasoning = text[content_start:end_pos]
+        suffix = text[end_pos:]
+        return prefix, reasoning, suffix
+
+    # Experiment: if  and response includes message.reasoning_content, use summarized thoughts instead of <reasoning>
+    def replace_reasoning_tag_with_thought_summaries(self, response) -> str:
+        content = response.choices[0].message.content
+        if content and hasattr(response.choices[0].message, "reasoning_content"):
+            thought_summary = response.choices[0].message.reasoning_content
+            prefix, reasoning, suffix = self.split_reasoning(content or "")
+            if reasoning and len(reasoning) < len(thought_summary):
+                # replace the content of <reasoning> tag with native thought summaries
+                return prefix + thought_summary + suffix
+        return content
 
     def get_template_vars(self) -> dict[str, Any]:
         return asdict(self.config) | {"n_model_calls": self.n_calls, "model_cost": self.cost}

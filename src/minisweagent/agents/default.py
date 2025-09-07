@@ -104,6 +104,7 @@ class DefaultAgent:
         si_with_tag = self.messages[0].copy()
         si_with_tag["content"] = si_with_tag["content"] + prompt_tag
         response = self.model.query([si_with_tag] + self.messages[1:])
+        
         self.add_message("assistant", **response)
         return response
 
