@@ -6,7 +6,7 @@ mini-extra swebench \
 --split test \
 --model "vertex_ai/gemini-2.5-pro" \
 --workers 1 \
---filter "django__django-14351" \
+--filter "pallets__flask-5014" \
 --environment-class docker \
 --output "out" \
 --redo-existing \
