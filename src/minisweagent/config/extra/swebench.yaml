@@ -42,6 +42,7 @@ agent:
       - "Next Command Rationale": Propose the optimal approach for the next command and justify your decision with a trade-off analysis against viable alternatives.
 
     2. `<bash_command>`: this response part provides one bash command that you want to execute next.
+
     </response_format>
 
     <final_command>
@@ -83,8 +84,9 @@ agent:
     {{ output.output[-100000:] }}
     </output_tail>
     {%- endif -%}
+    Please respond with your analysis and strategy in the `<reasoning>` tag, and the next command in the `<bash_command>` tag.
   format_error_template: |
-    Your response must include both the `<reasoning>` tag with your analysis and the `<bash_command>` tag containing the bash command that you want me to execute.
+    Your response must include both the `<reasoning>` tag with your analysis and strategy and the `<bash_command>` tag containing the bash command that you want me to execute.
   step_limit: 250
   cost_limit: 20.
 
