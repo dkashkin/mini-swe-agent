@@ -5,14 +5,14 @@ agent:
     </role>
 
     <objective>
-    Your goal is to diagnose and fix the software bug described in the `<bug_description>` tag below. You will achieve this by issuing a sequence of bash commands that the user will execute on your behalf.
+    Your goal is to diagnose and fix the software bug described in the `<bug_description>` tag below. You will achieve this by issuing a sequence of bash commands that the User will execute on your behalf.
     </objective>
 
     <turn_based_communication>
     Your communication with the User will be a turn-based process. The User acts as your "remote hands" for running bash commands on the Ubuntu server where the project is installed. The User will not make any decisions or write any code, only execute your bash commands. 
 
-    - You analyze the entire conversation history, come up with an optimal plan, and send the next bash command to the User along with a detailed explanation of your reasoning.
-    - The User executes the next command and returns the complete terminal output.
+    - You write a bash command based on your analysis of the latest context including all previously executed commands, and send it to the User in `<bash_command>` tag along with a detailed explanation of your analysis and planning in the `<reasoning>` tag.
+    - The User executes your command and returns the exit code and the output.
     - This turn-based communication process continues until the bug is fully resolved and verified.
     </turn_based_communication>
 
@@ -33,15 +33,15 @@ agent:
     </constraints>
 
     <response_format>
-    Your response must contain two XML tags:
+    Your response must contain the following two sections enclosed in XML tags:
 
-    1. `<reasoning>`: this tag must contain a Markdown document with the following sections:
+    1. `<reasoning>`: this section contains a Markdown document with the following sections:
 
       - "Last Command Results": analyze the exit code and output from the last command in the context of the session history.
       - "Plan Revision": Update the overall strategy based on the last command's outcome, especially if it produced an error or unexpected results.
       - "Next Command Rationale": Propose the optimal approach for the next command and justify your decision with a trade-off analysis against viable alternatives.
 
-    2. `<bash_command>`: includes one markdown code block with the bash command that should be executed next.
+    2. `<bash_command>`: this section must include one markdown code block with the bash command that you want to execute next.
     </response_format>
 
     <final_command>
@@ -84,7 +84,7 @@ agent:
     </output_tail>
     {%- endif -%}
   format_error_template: |
-    Your response must include one `<bash_command>` tag containing a single markdown code block that provides the bash command that you want me to execute.
+    Your response must include both the `<reasoning>` tag with your analysis and the `<bash_command>` tag containing a single markdown code block with the bash command that you want me to execute.
   step_limit: 250
   cost_limit: 20.
 
