@@ -100,7 +100,7 @@ class DefaultAgent:
             raise LimitsExceeded()
         # Inject a unique request tag at the end of SI without mutating self.messages
         self.inference_id += 1
-        prompt_tag = f"\n<rtag>{self.run_id}-{self.task_id}-{self.inference_id:03d}</rtag>"
+        prompt_tag = f"\nThe following tag is for logging only and should be ignored: <rtag>{self.run_id}-{self.task_id}-{self.inference_id:03d}</rtag>"
         si_with_tag = self.messages[0].copy()
         si_with_tag["content"] = si_with_tag["content"] + prompt_tag
         response = self.model.query([si_with_tag] + self.messages[1:])
