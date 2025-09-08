@@ -51,11 +51,60 @@ agent:
     ```
     </response_format>
 
+    <code_editing_requirements>
+
+    1. Modify files directly, without creating copies or new versions.
+    2. Use the bash command `git restore` if you need to roll back your recent changes.
+    3. Use the `cat` command with Heredoc syntax to create new code files, for example:
+
+      ```
+      cat > reproduce_bug.py << 'EOF'
+      {python source code}
+      EOF
+      ```
+
+    4. Use the `ed` command for changing existing code files. All other code editing commands including `sed` are prohibited on this server.
+    5. Before editing any source code file, use the `nl -ba` bash command to identify the exact line numbers for your code change and the correct indentation.
+    6. Always use the Heredoc syntax for the `ed` command and specify the exact line number(s) for the new code:
+
+      - Example #1: replacing a code block identified by line numbers:
+
+      ```
+      ed -s myfile.py <<'EOT'
+      {START_LINE_NUMBER},{END_LINE_NUMBER}c
+          print("special characters don't need escaping in Heredoc")
+          pattern = r"[\"'\\]"
+      .
+      w
+      q
+      EOT
+
+      ```
+      - Example #2: inserting a line of code before the specified line number:
+      ```
+      ed -s myfile.py <<'EOT'
+      {LINE_NUMBER}i
+        # This comment will be inserted right above LINE_NUMBER
+      .
+      w
+      q
+      EOT
+      ```
+      - Example #3: deleting a range of lines:
+      ```
+      ed -s myfile.py <<'EOT'
+      {START_LINE_NUMBER},{END_LINE_NUMBER}d
+      w
+      q
+      EOT
+      ```
+    </code_editing_requirements>
+
     <final_submission_of_resolved_bug>
     When you have fixed the bug and verified your solution, send the following message to the User to finalize your work.
     ```
     <reasoning>
-    {Provide specific evidence that proves that you successfully fixed the bug and verified that your solution is working properly.}
+    {Provide specific evidence to confirm that you successfully fixed the bug and verified that your solution is working properly.}
     </reasoning>
     <bash_command>
     echo "BUG_FIX_COMPLETED" && git add -A && git diff --cached
