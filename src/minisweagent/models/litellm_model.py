@@ -64,7 +64,7 @@ class LitellmModel:
         os.environ["VERTEXAI_LOCATION"] = "us-east5"
 
         return litellm.completion(
-            model="vertex_ai/claude-sonnet-4@20250514",
+            model="vertex_ai/claude-sonnet-4",
             messages=messages,
             reasoning_effort="medium",
         )
