@@ -4,7 +4,7 @@ rm -rf out/* &&
 mini-extra swebench \
 --subset verified \
 --split test \
---model "vertex_ai/claude-sonnet-4" \
+--model "vertex_ai/claude-sonnet-4@20250514" \
 --workers 1 \
 --filter "astropy__astropy-7166" \
 --environment-class docker \
