@@ -58,6 +58,7 @@ class LitellmModel:
         ),
     )
     def _query(self, messages: list[dict[str, str]], **kwargs):
+        logger.info(f"_query is calling litellm.completion with model={self.config.model_name}")
         try:
             return litellm.completion(
                 model=self.config.model_name, messages=messages, **(self.config.model_kwargs | kwargs)
