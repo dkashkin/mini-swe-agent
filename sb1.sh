@@ -6,7 +6,7 @@ mini-extra swebench \
 --split test \
 --model "vertex_ai/gemini-2.5-pro" \
 --workers 1 \
---filter "pallets__flask-5014" \
+--filter "astropy__astropy-7166" \
 --environment-class docker \
 --output "out" \
 --redo-existing \
