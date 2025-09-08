@@ -61,7 +61,7 @@ class LitellmModel:
         try:
             litellm._turn_on_debug()
             return litellm.completion(
-                model="claude-sonnet-4@20250514", custom_llm_provider="vertex_ai"
+                model="vertex_ai/claude-sonnet-4@20250514"
                 # model=self.config.model_name, messages=messages, **(self.config.model_kwargs | kwargs)
             )
         except litellm.exceptions.AuthenticationError as e:
