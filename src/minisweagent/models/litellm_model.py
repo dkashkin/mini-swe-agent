@@ -35,8 +35,7 @@ class LitellmModelConfig:
 
 class LitellmModel:
     def __init__(self, **kwargs):
-        self.config = LitellmModelConfig("vertex_ai/claude-sonnet-4")
-        # self.config = LitellmModelConfig(**kwargs)
+        self.config = LitellmModelConfig(**kwargs)
         self.cost = 0.0
         self.n_calls = 0
         if self.config.litellm_model_registry and Path(self.config.litellm_model_registry).is_file():
@@ -59,25 +58,15 @@ class LitellmModel:
         ),
     )
     def _query(self, messages: list[dict[str, str]], **kwargs):
-        os.environ["GEMINI_API_KEY"] = ""
-        os.environ["VERTEXAI_PROJECT"] = "cloud-llm-preview1"
-        os.environ["VERTEXAI_LOCATION"] = "us-east5"
-
-        return litellm.completion(
-            model="vertex_ai/claude-sonnet-4",
-            messages=messages,
-            reasoning_effort="medium",
-        )
-
-        # try:
-        #     litellm._turn_on_debug()
-        #     return litellm.completion(
-        #         model="vertex_ai/claude-sonnet-4@20250514", messages=messages, 
-        #         # model=self.config.model_name, messages=messages, **(self.config.model_kwargs | kwargs)
-        #     )
-        # except litellm.exceptions.AuthenticationError as e:
-        #     e.message += " You can permanently set your API key with `mini-extra config set KEY VALUE`."
-        #     raise e
+        try:
+            litellm._turn_on_debug()
+            return litellm.completion(
+                # model="vertex_ai/claude-sonnet-4@20250514", messages=messages, 
+                model=self.config.model_name, messages=messages, **(self.config.model_kwargs | kwargs)
+            )
+        except litellm.exceptions.AuthenticationError as e:
+            e.message += " You can permanently set your API key with `mini-extra config set KEY VALUE`."
+            raise e
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         response = self._query(messages, **kwargs)
