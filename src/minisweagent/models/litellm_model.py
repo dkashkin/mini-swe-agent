@@ -85,12 +85,26 @@ class LitellmModel:
             "content": self.replace_reasoning_tag_with_thought_summaries(response)
         }
 
+    # Normal structure: <reasoning>...</reasoning><bash_command>...</bash_command>
+    # This method autocorrects 3 rare patterns:
+    # ...<bash_command>...</bash_command>
+    # <reasoning>...<bash_command>...</bash_command>
+    # ...</reasoning><bash_command>...</bash_command>
     def split_reasoning(self, text) -> tuple[str, str]:
-        opening_tag = f"<reasoning>"
-        closing_tag = f"</reasoning>"
+        opening_tag = "<reasoning>"
+        closing_tag = "</reasoning>"
+        command_tag = "<bash_command>"
         start_pos = text.find(opening_tag)
+        if start_pos < 0: 
+            # Ugly workaround for rare cases when opening tag is missing
+            text = f"{opening_tag}{text}"
+            start_pos = 0
         content_start = start_pos + len(opening_tag)
         end_pos = text.find(closing_tag, content_start)
+        if end_pos < 0 and text.find(command_tag, content_start) > 0:
+            # Ugly workaround for rare cases when closing tag is missing
+            end_pos = text.find(command_tag, content_start)
+            return text[content_start:end_pos], text[end_pos:]
         if start_pos < 0 or end_pos < 0 or start_pos > end_pos:
             return text, ''
         reasoning = text[content_start:end_pos]
