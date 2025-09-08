@@ -60,7 +60,8 @@ class LitellmModel:
     def _query(self, messages: list[dict[str, str]], **kwargs):
         try:
             return litellm.completion(
-                model=self.config.model_name, messages=messages, **(self.config.model_kwargs | kwargs)
+                model="vertex_ai/claude-sonnet-4@20250514", **(self.config.model_kwargs | kwargs)
+                # model=self.config.model_name, messages=messages, **(self.config.model_kwargs | kwargs)
             )
         except litellm.exceptions.AuthenticationError as e:
             e.message += " You can permanently set your API key with `mini-extra config set KEY VALUE`."

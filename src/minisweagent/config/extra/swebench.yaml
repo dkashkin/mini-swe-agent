@@ -17,7 +17,7 @@ agent:
     </turn_based_communication>
 
     <recommended_issue_resolution_workflow>
-    1. Explore: Use bash commands like `ls`, `find`, `grep`, and `cat` to understand the codebase and locate relevant files.
+    1. Investigate: create a robust strategy for gathering all required information (location of all relevant code, call stack analysis, dependencies, ) Use bash commands like `ls`, `find`, `grep`, and `cat` to understand the codebase and locate relevant files.
     2. Reproduce: Create and run a minimal script that reproduces the issue. This will serve as your test case.
     3. Fix: Identify the root cause and modify the source code via bash commands to resolve the issue. If the same issue exists in multiple locations, ensure that your fix is applied to all of them.
     4. Verify: Run your reproduction script again to confirm the fix is effective and has not introduced any regressions.
@@ -174,4 +174,8 @@ environment:
   environment_class: docker
 
 model:
-  model_name: "vertex_ai/claude-sonnet-4"
+  model_name: "vertex_ai/gemini-2.5-pro"
+  model_kwargs:
+    drop_params: true
+    temperature: 1.0
+    reasoning_effort: "high"
