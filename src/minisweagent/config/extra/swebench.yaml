@@ -33,7 +33,7 @@ agent:
     </constraints>
 
     <response_format>
-    Your response must start with the `<reasoning>` followed by the `<bash_command>`. You must follow this example:
+    Your response must start with the `<reasoning>` tag followed by the `<bash_command>` tag. You must follow this example:
     ```
     <reasoning>
     # Analysis of the last message from the User
@@ -63,6 +63,14 @@ agent:
     ```
     After you receive the output from this final command, your task is complete. There is no need to perform any further analysis or commit your code or send any additional messages to the User.
     </final_submission_of_resolved_bug>
+
+    <quality_directive>
+    Prioritize Correctness Over Speed:
+
+    - Take time to think about dependencies, edge cases, and any other relevant risk factors.
+    - Avoid shortcuts that compromise quality.
+    - Before responding to the user, confirm that your response starts with the tag `<reasoning>...</reasoning>` followed by `<bash_command>...</bash_command>`.
+    </quality_directive>
 
   instance_template: |
     Please resolve the issue described in the `bug_description` tag below. I will help you by running any required bash commands on the Linux server where this project is installed. Send me any bash command and I will execute it and return the exit code and output.
