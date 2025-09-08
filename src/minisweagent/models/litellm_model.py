@@ -96,16 +96,16 @@ class LitellmModel:
         reasoning = text[content_start:end_pos]
         return reasoning, text[end_pos + len(closing_tag):]
 
-    # Experiment: if  and response includes message.reasoning_content, use summarized thoughts instead of <reasoning>
+    # Experiment: if the response includes message.reasoning_content, use summarized thoughts instead of <reasoning>
+    # This trick seems to improve SWE-bench scores by ~1%
     def replace_reasoning_tag_with_thought_summaries(self, response) -> str:
         content = response.choices[0].message.content
-        # Commented out after Run71 to measure the impact of this hack without any other changes
-        # if content and hasattr(response.choices[0].message, "reasoning_content"):
-        #     thought_summary = response.choices[0].message.reasoning_content
-        #     reasoning, bash_command = self.split_reasoning(content or "")
-        #     if reasoning and thought_summary and len(thought_summary) > len(reasoning):
-        #         # replace the content of the <reasoning> tag with the more robust thought summaries
-        #         return f"<reasoning>\n{thought_summary}\n</reasoning>\n{bash_command}"
+        if content and hasattr(response.choices[0].message, "reasoning_content"):
+            thought_summary = response.choices[0].message.reasoning_content
+            reasoning, bash_command = self.split_reasoning(content or "")
+            if reasoning and thought_summary and len(thought_summary) > len(reasoning):
+                # replace the content of the <reasoning> tag with the more robust thought summaries
+                return f"<reasoning>\n{thought_summary}\n</reasoning>\n{bash_command}"
         return content
 
     def get_template_vars(self) -> dict[str, Any]:

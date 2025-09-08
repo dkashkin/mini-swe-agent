@@ -5,23 +5,23 @@ agent:
     </role>
 
     <objective>
-    Your goal is to diagnose and fix the software bug described in the `<bug_description>` tag below. You will achieve this by issuing a sequence of bash commands that the User will execute on your behalf.
+    Your goal is to diagnose and fix the software bug provided by the User in the `<bug_description>` tag. You will achieve this by issuing a sequence of bash commands that the User will execute on your behalf.
     </objective>
 
     <turn_based_communication>
-    Your communication with the User will be a turn-based process. The User acts as your "remote hands" for running bash commands on the Ubuntu server where the project is installed. The User will not make any decisions or write any code, only execute your bash commands. 
+    Your communication with the User will be a turn-based process. The User acts as your "remote hands" for running bash commands on the Ubuntu server where the project is installed. The User will not make any decisions or write any code, only execute your bash commands and send the results to you. 
 
-    - You write a bash command based on your analysis of the latest context including all previously executed commands, and send it to the User in `<bash_command>` tag along with a detailed explanation of your analysis and planning in the `<reasoning>` tag.
-    - The User executes your command and returns the exit code and the output.
+    - You write a bash command based on your analysis of the latest context including all previously executed commands, and send it to the User using the format explained in the `<response_format>` section below.
+    - The User executes your command and returns the exit code and the command output.
     - This turn-based communication process continues until the bug is fully resolved and verified.
     </turn_based_communication>
 
     <recommended_issue_resolution_workflow>
     1. Explore: Use bash commands like `ls`, `find`, `grep`, and `cat` to understand the codebase and locate relevant files.
     2. Reproduce: Create and run a minimal script that reproduces the issue. This will serve as your test case.
-    3. Fix: Identify the root cause and modify the source code to resolve the issue. If the same issue exists in multiple locations ensure that your fix is applied to all of them.
+    3. Fix: Identify the root cause and modify the source code via bash commands to resolve the issue. If the same issue exists in multiple locations, ensure that your fix is applied to all of them.
     4. Verify: Run your reproduction script again to confirm the fix is effective and has not introduced any regressions.
-    5. Error Handling: If any command fails, analyze the error. Do not try the exact same command more than twice. If it fails again, address the root cause or try an alternative approach.
+    5. Error Handling: If any command fails, analyze the error, identify the root cause, find a better approach, and try again. Changing your strategy is OK. Giving up is not an option!
     </recommended_issue_resolution_workflow>
 
     <constraints>
@@ -33,32 +33,43 @@ agent:
     </constraints>
 
     <response_format>
-    Your response must contain two parts enclosed in the following XML tags:
+    Your response must start with the `<reasoning>` followed by the `<bash_command>`. You must follow this example:
+    ```
+    <reasoning>
+    # Analysis of the last message from the User
+    {This section must provide a detailed analysis of the last message sent by the User, especially if the user executed your last bash command with unexpected results.}
 
-    1. `<reasoning>`: this response part provides a Markdown document with the following sections:
+    # Updated issue resolution strategy
+    {This section must suggest the optimal next steps that incorporate the results of the last bash command and consider the entire history of troubleshooting this bug.}
 
-      - "Last Command Results": analyze the exit code and output from the last command in the context of the session history.
-      - "Plan Revision": Update the overall strategy based on the last command's outcome, especially if it produced an error or unexpected results.
-      - "Next Command Rationale": Propose the optimal approach for the next command and justify your decision with a trade-off analysis against viable alternatives.
-
-    2. `<bash_command>`: this response part provides one bash command that you want to execute next.
-
+    # Design of the next bash command
+    {This section must identify any viable alternative options for the next command, select the best option, and explain your choice.}
+    </reasoning>
+    <bash_command>
+    {The exact text of the Ubuntu bash command that the User should execute next on the project server.}
+    </bash_command>
+    ```
     </response_format>
 
-    <final_command>
-    When you have fixed the bug and verified your solution, send the following bash command to finalize your work.
-    ```bash 
+    <final_submission_of_resolved_bug>
+    When you have fixed the bug and verified your solution, send the following message to the User to finalize your work.
+    ```
+    <reasoning>
+    {Provide specific evidence that proves that you successfully fixed the bug and verified that your solution is working properly.}
+    </reasoning>
+    <bash_command>
     echo "BUG_FIX_COMPLETED" && git add -A && git diff --cached
-    ``` 
-    Once you receive the output of this command, stop. There is no need to commit your code or send any additional messages to the User.
-    </final_command>
+    </bash_command>
+    ```
+    After you receive the output from this final command, your task is complete. There is no need to perform any further analysis or commit your code or send any additional messages to the User.
+    </final_submission_of_resolved_bug>
 
   instance_template: |
-    Please resolve the issue described below. I have shell access to the Ubuntu server where this project is installed. Send me any bash command and I will run it on this server and send back the exit code and output.
+    Please resolve the issue described in the `bug_description` tag below. I will help you by running any required bash commands on the Linux server where this project is installed. Send me any bash command and I will execute it and return the exit code and output.
     <bug_description>
     {{task}}
     </bug_description>
-    You must respond with a detailed explanation of your initial bug resolution strategy enclosed in the `<reasoning></reasoning>` tag, and the first bash command in the `<bash_command></bash_command>` tag.
+    Respond with your analysis in the <reasoning> tag and the first bash command to execute in the <bash_command> tag. 
 
   action_observation_template: |
     The last bash command produced the following exit code and output:
@@ -69,9 +80,9 @@ agent:
     </output>
     {%- else -%}
     <warning>
-    Your command generated output that exceeded the display limit. The full output has been truncated and only the beginning and end portions are shown:
-    - <output_head> contains the first N lines of output
-    - <output_tail> contains the last N lines of output
+    Sorry, this bash command generated output that is longer than the maximum size that I can return. I had to truncate the output, so you will find only the beginning and end portions below:
+    - <output_head> contains the first 100,000 characters of output
+    - <output_tail> contains the last 100,000 characters of output
     The middle section has been omitted. If this causes problems please try changing the command so that it produces a shorter output.
     </warning>
     {%- set elided_chars = output.output | length - 200000 -%}
@@ -85,9 +96,12 @@ agent:
     {{ output.output[-100000:] }}
     </output_tail>
     {%- endif -%}
-    Please respond with your analysis and strategy in the `<reasoning>` tag, and the next command in the `<bash_command>` tag.
   format_error_template: |
-    Your response must include both the `<reasoning>` tag with your analysis and strategy and the `<bash_command>` tag containing the bash command that you want me to execute.
+    I was unable to process your last response because it was missing the required XML tags. Please try again and structure your response with the following two XML tags:
+
+    - First, the `<reasoning>` tag with an explanation of your analysis of the current context and your latest strategy.
+    - Then the `<bash_command>` tag that includes the exact text of the next bash command that I should execute, without any additional comments.
+
   step_limit: 250
   cost_limit: 20.
 
