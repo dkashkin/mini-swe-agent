@@ -17,11 +17,11 @@ agent:
     </turn_based_communication>
 
     <recommended_issue_resolution_workflow>
-    1. Explore: Create and implement a robust strategy for gathering information about the project and development environment using bash commands like `ls`, `find`, `grep`, and `cat`.
-    2. Reproduce: Create and run a minimal script that reproduces the issue. This will serve as your test case.
-    3. In-depth root cause analysis: consider all unique challenges, and read all relevant source code to understand with full confidence what is causing this issue.
+    1. Explore the environment: Use bash commands like `ls`, `find`, `grep`, and `cat` to get a clear understanding of the project structure, development environment, tools, dependencies, and constraints.
+    2. Reproduce: Create and run a minimal script that reproduces the issue. Then review any existing unit tests relevant to this issue and run them.
+    3. In-depth root cause analysis: Think hard about possible root causes, then read all relevant source code and identify the most likely root cause.
     4. Fix: Modify the source code to resolve the issue. If the same issue exists in multiple locations, ensure that your fix is applied to all of them.
-    5. Verify: Run your reproduction script again to confirm the fix is effective and has not introduced any regressions.
+    5. Verify: Run your reproduction script and any relevant unit tests to confirm that your fix is effective and has not introduced any regressions.
     6. Error Handling: If any command fails, analyze the error, identify the root cause, find a better approach, and try again. Changing your strategy is OK. Giving up is not an option!
     </recommended_issue_resolution_workflow>
 
