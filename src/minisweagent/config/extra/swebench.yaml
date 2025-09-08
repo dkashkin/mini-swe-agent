@@ -175,8 +175,3 @@ environment:
 
 model:
   model_name: "vertex_ai/claude-sonnet-4"
-  # model_name: "vertex_ai/gemini-2.5-pro"
-  model_kwargs:
-    drop_params: true
-    temperature: 1.0
-    reasoning_effort: "high"
