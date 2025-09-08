@@ -61,8 +61,8 @@ class LitellmModel:
         try:
             litellm._turn_on_debug()
             return litellm.completion(
-                # model="vertex_ai/claude-sonnet-4@20250514", **(self.config.model_kwargs | kwargs)
-                model=self.config.model_name, messages=messages, custom_llm_provider="vertex_ai"
+                model="vertex_ai/claude-sonnet-4@20250514", custom_llm_provider="vertex_ai"
+                # model=self.config.model_name, messages=messages, **(self.config.model_kwargs | kwargs)
             )
         except litellm.exceptions.AuthenticationError as e:
             e.message += " You can permanently set your API key with `mini-extra config set KEY VALUE`."
