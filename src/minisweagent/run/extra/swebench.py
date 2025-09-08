@@ -86,6 +86,10 @@ def get_sb_environment(config: dict, instance: dict) -> Environment:
     elif env_config["environment_class"] == "singularity":
         env_config["image"] = "docker://" + image_name
     env = get_environment(env_config)
+    # Ed supports Heredoc syntax which avoids the need to escape special characters
+    out = env.execute("apt-get update && apt-get install -y ed") 
+    if out["returncode"] != 0:
+        raise RuntimeError(f"Error installing ed inside Docker: {out}")
     if startup_command := config.get("run", {}).get("env_startup_command"):
         startup_command = Template(startup_command).render(**instance)
         out = env.execute(startup_command)
