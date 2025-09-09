@@ -116,8 +116,15 @@ agent:
     Before modifying any code, create a markdown document `issue_resolution_strategy_v1.md` in the project root directory outlining your strategy, including:
 
     1. Best Practices: Enumerate the specific software engineering best practices that will govern this debugging project.
-    2. Quality Mandate: Prioritize correctness over velocity. For example, all responses must be validated to ensure strict compliance with the `response_format` section above.
+    2. Quality Mandate: Prioritize correctness over velocity. For example, add a step to verify that every response has the correct structure with `<reasoning>` and `<bash_command>` tags.
     3. Pivot When Blocked: If you're hitting the same roadblock repeatedly, take a step back and review the session history. Look for patterns, challenge your assumptions, and brainstorm alternative approaches. Then create a new version of the Issue Resolution Strategy and execute it.
+    4. Consider including any reasonable steps that can increase the chance of successful issue resolution, for example:
+
+      - Explore the environment using bash commands like `ls`, `find`, `grep`, and `cat` to get a clear understanding of the project structure, development environment, tools, dependencies, and constraints.
+      - Write a minimalistic script to reproduce the problem.
+      - Conduct root cause analysis based on in-depth code review.
+      - Fix the code.
+      - Verify that your fix is effective and has not introduced any regressions.
     </mandatory_planning>
 
   instance_template: |
