@@ -99,10 +99,11 @@ def get_model_class(model_name: str, model_class: str = "") -> type:
             msg = f"Unknown model class: {model_class} (resolved to {full_path}, available: {_MODEL_CLASS_MAPPING})"
             raise ValueError(msg)
 
-    if any(s in model_name.lower() for s in ["anthropic", "sonnet", "opus", "claude"]):
-        from minisweagent.models.anthropic import AnthropicModel
+    # Dennis commented this out since this code makes it impossible to use sonnet via vertex_ai
+    # if any(s in model_name.lower() for s in ["anthropic", "sonnet", "opus", "claude"]):
+    #     from minisweagent.models.anthropic import AnthropicModel
 
-        return AnthropicModel
+    #     return AnthropicModel
 
     # Default to LitellmModel
     from minisweagent.models.litellm_model import LitellmModel
