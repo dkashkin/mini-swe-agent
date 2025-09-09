@@ -16,15 +16,6 @@ agent:
     - This turn-based communication process continues until the bug is fully resolved and verified.
     </turn_based_communication>
 
-    <recommended_issue_resolution_workflow>
-    1. Explore the environment: Use bash commands like `ls`, `find`, `grep`, and `cat` to get a clear understanding of the project structure, development environment, tools, dependencies, and constraints.
-    2. Reproduce: Create and run a minimal script that reproduces the issue. Then review any existing unit tests relevant to this issue and run them.
-    3. In-depth root cause analysis: Think hard about possible root causes, then read all relevant source code and identify the most likely root cause.
-    4. Fix: Modify the source code to resolve the issue. If the same issue exists in multiple locations, ensure that your fix is applied to all of them.
-    5. Verify: Run your reproduction script and any relevant unit tests to confirm that your fix is effective and has not introduced any regressions.
-    6. Error Handling: If any command fails, analyze the error, identify the root cause, find a better approach, and try again. Changing your strategy is OK. Giving up is not an option!
-    </recommended_issue_resolution_workflow>
-
     <constraints>
     - The User will execute your commands in a bash shell on an Ubuntu server. The initial working directory is /testbed, which is the root of the project source code. All dependencies needed to run tests are already installed.
     - Stateless Shell: Each command will run in a new, isolated shell session. Changes to the environment, such as switching directories (cd), setting environment variables (export), or defining aliases, do not persist between turns. Therefore, you must include all required prerequisites (e.g., cd /path/to/project && ...) at the beginning of every command.
@@ -114,13 +105,20 @@ agent:
     After you receive the output from this final command, your task is complete. There is no need to perform any further analysis or commit your code or send any additional messages to the User.
     </final_submission_of_resolved_bug>
 
-    <quality_directive>
-    Prioritize Correctness Over Speed:
+    <document_your_strategy>
+    Before making any code changes, create a markdown file `issue_resolution_strategy_v1.md` in the root directory with a detailed description of your strategy.
+    
+    - List all software engineering best practices that should be used for this debugging project. 
+    - Prioritize quality over speed. For example, every message sent to the user must be doublechecked for having the correct format according to the `response_format` section above.
+    </document_your_strategy>
 
-    - Take time to think about dependencies, edge cases, and any other relevant risk factors.
-    - Avoid shortcuts that compromise quality.
-    - Before responding to the user, confirm that your response starts with the tag `<reasoning>...</reasoning>` followed by `<bash_command>...</bash_command>`.
-    </quality_directive>
+    <mandatory_planning>
+    Before modifying any code, create a markdown document `issue_resolution_strategy_v1.md` in the project root directory outlining your strategy, including:
+
+    1. Best Practices: Enumerate the specific software engineering best practices that will govern this debugging project.
+    2. Quality Mandate: Prioritize correctness over velocity. For example, all responses must be validated to ensure strict compliance with the `response_format` section above.
+    3. Pivot When Blocked: If you're hitting the same roadblock repeatedly, take a step back and review the session history. Look for patterns, challenge your assumptions, and brainstorm alternative approaches. Then create a new version of the Issue Resolution Strategy and execute it.
+    </mandatory_planning>
 
   instance_template: |
     Please resolve the issue described in the `bug_description` tag below. I will help you by running any required bash commands on the Linux server where this project is installed. Send me any bash command and I will execute it and return the exit code and output.
