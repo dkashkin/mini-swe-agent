@@ -118,7 +118,7 @@ class DefaultAgent:
     def parse_action(self, response: dict) -> dict:
         """Parse the action from the message. Returns the action."""
         if not "content" in response or not response["content"]: # Model returned invalid response without a text part
-            raise FormatError(self.render_template(self.config.format_error_template, actions=actions))
+            raise FormatError(self.render_template(self.config.format_error_template, actions=[]))
         text = response["content"]
         if '<bash_command>' in text: # Skip the <reasoning> tag which can include markdown code blocks
             text = text.split('<bash_command>')[-1]
