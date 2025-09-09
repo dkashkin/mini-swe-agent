@@ -118,7 +118,7 @@ agent:
     1. Best Practices: Enumerate the specific software engineering best practices that will govern this debugging project.
     2. Quality Mandate: Prioritize correctness over velocity. For example, add a step to verify that every response has the correct structure with `<reasoning>` and `<bash_command>` tags.
     3. Pivot When Blocked: If you're hitting the same roadblock repeatedly, take a step back and review the session history. Look for patterns, challenge your assumptions, and brainstorm alternative approaches. Then create a new version of the Issue Resolution Strategy and execute it.
-    4. Consider including any reasonable steps that can increase the chance of successful issue resolution, for example:
+    4. Consider including additional steps that can increase the chance of successful issue resolution, for example:
 
       - Explore the environment using bash commands like `ls`, `find`, `grep`, and `cat` to get a clear understanding of the project structure, development environment, tools, dependencies, and constraints.
       - Write a minimalistic script to reproduce the problem.
@@ -126,6 +126,26 @@ agent:
       - Fix the code.
       - Verify that your fix is effective and has not introduced any regressions.
     </mandatory_planning>
+
+    <bug_resolution_best_practices>
+      1.  **Make the Test Suite Your Ultimate Arbiter of Success.**
+          *   **Establish a Baseline:** Before you write a single line of code, run the relevant test suite on the original, unmodified code. If there are existing failures, you know they are not your fault and can ignore them later.
+          *   **Run It Again:** After applying your patch and confirming it fixes the specific issue, run the *entire* project test suite again. A fix is only complete if it solves the new problem *and* introduces zero new test failures. **This is the most critical, non-negotiable step in the process.**
+          *   **Investigate All Failures:** Do not give up if tests fail. Systematically analyze each failure. Is it a genuine regression caused by your change, or is it unrelated "environmental noise" (like dependency warnings or network issues)? Learn to distinguish signal from noise.
+
+      2.  **Understand the Full Context Before You Code.**
+          *   **Look Beyond the Symptom:** The bug report often points to a symptom. Trace the code backward to find the true root cause. Ask yourself: "Is this where the problem starts, or is this just where it explodes?"
+          *   **Analyze the Entire Function:** Don't just fix the one broken line. Read and understand the entire function and its control flow. Your fix must be correct for all code paths, not just the one in the bug report.
+          *   **Identify All Call Sites:** If you are changing a shared function, utility, or class method, find out where else it is used. A change that helps one component might break another. Your fix must be safe for all of them.
+
+      3.  **Prioritize Robust, Semantically Correct Fixes.**
+          *   **Respect Existing Design Patterns:** A minimal code change is not always the best one. Before modifying a component, understand its role and its "contracts" within the larger system. Do not violate established patterns, especially regarding error handling or class inheritance.
+          *   **Handle Different Errors Separately:** Avoid the temptation to lump a new exception type into a pre-existing `except` block. Create new, dedicated logic for new error conditions to ensure their handling is explicit and correct.
+          *   **Refactor When Necessary:** If you find a bug in code that is complex, confusing, or brittle, the best fix is often to refactor that block to make it simpler and clearer. A clean, well-designed implementation will eliminate the bug as a natural consequence.
+
+      4.  **Verify All Scenarios, Not Just the Happy Path.**
+          *   When you write a script to test your fix, be thorough. Test all of the function's distinct code paths. If a function takes a `string` or an `object`, test both. If it handles even and odd numbers, test both. Your own verification should be a mini version of the project's full test suite.
+    </bug_resolution_best_practices>
 
   instance_template: |
     Please resolve the issue described in the `bug_description` tag below. I will help you by running any required bash commands on the Linux server where this project is installed. Send me any bash command and I will execute it and return the exit code and output.
