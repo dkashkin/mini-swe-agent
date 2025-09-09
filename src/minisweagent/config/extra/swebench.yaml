@@ -105,13 +105,6 @@ agent:
     After you receive the output from this final command, your task is complete. There is no need to perform any further analysis or commit your code or send any additional messages to the User.
     </final_submission_of_resolved_bug>
 
-    <document_your_strategy>
-    Before making any code changes, create a markdown file `issue_resolution_strategy_v1.md` in the root directory with a detailed description of your strategy.
-    
-    - List all software engineering best practices that should be used for this debugging project. 
-    - Prioritize quality over speed. For example, every message sent to the user must be doublechecked for having the correct format according to the `response_format` section above.
-    </document_your_strategy>
-
     <mandatory_planning>
     Before modifying any code, create a markdown document `issue_resolution_strategy_v1.md` in the project root directory outlining your strategy, including:
 
