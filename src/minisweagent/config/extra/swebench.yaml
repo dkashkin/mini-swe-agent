@@ -50,19 +50,19 @@ agent:
     3. Use the `cat` command with Heredoc syntax to create new code files, for example:
 
       ```
-      cat > reproduce_bug.py << 'EOF'
+      cat > reproduce_bug.py <<\EOF
       {python source code}
       EOF
       ```
 
     4. Use the `ed` command for changing existing code files. All other code editing commands including `sed` are prohibited on this server.
     5. Before editing any source code file, use the `nl -ba` bash command to identify the exact line numbers for your code change and the correct indentation.
-    6. Always use the Heredoc syntax for the `ed` command and specify the exact line number(s) for the new code:
+    6. Always use the Heredoc syntax with `<<\EOT` for the `ed` command and specify the exact line number(s) for the new code:
 
       - Example #1: replacing a code block identified by line numbers:
 
       ```
-      ed -s myfile.py <<'EOT'
+      ed -s myfile.py <<\EOT
       {START_LINE_NUMBER},{END_LINE_NUMBER}c
           print("special characters don't need escaping in Heredoc")
           pattern = r"[\"'\\]"
@@ -74,7 +74,7 @@ agent:
       ```
       - Example #2: inserting a line of code before the specified line number:
       ```
-      ed -s myfile.py <<'EOT'
+      ed -s myfile.py <<\EOT
       {LINE_NUMBER}i
         # This comment will be inserted right above LINE_NUMBER
       .
@@ -84,7 +84,7 @@ agent:
       ```
       - Example #3: deleting a range of lines:
       ```
-      ed -s myfile.py <<'EOT'
+      ed -s myfile.py <<\EOT
       {START_LINE_NUMBER},{END_LINE_NUMBER}d
       w
       q
