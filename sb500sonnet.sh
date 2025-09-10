@@ -5,7 +5,7 @@ mini-extra swebench \
 --subset verified \
 --split test \
 --model "vertex_ai/claude-sonnet-4" \
---workers 10 \
+--workers 7 \
 --environment-class docker \
 --output "out" \
 --run-id "$1" \

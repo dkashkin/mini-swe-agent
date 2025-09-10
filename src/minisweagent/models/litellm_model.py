@@ -43,7 +43,7 @@ class LitellmModel:
         #     litellm.utils.register_model(json.loads(Path(self.config.litellm_model_registry).read_text()))
 
     @retry(
-        stop=stop_after_attempt(20),
+        stop=stop_after_attempt(100),
         wait=wait_exponential(multiplier=1, min=4, max=60),
         before_sleep=before_sleep_log(logger, logging.WARNING),
         retry=retry_if_not_exception_type(
