@@ -70,6 +70,7 @@ class LitellmModel:
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         response = self._query(messages, **kwargs)
         try:
+            litellm._turn_on_debug()
             cost = litellm.cost_calculator.completion_cost(response, model=self.config.model_name)
         except Exception as e:
             logger.critical(
