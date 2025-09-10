@@ -89,15 +89,16 @@ def get_model_class(model_name: str, model_class: str = "") -> type:
     it takes precedence over the `model_name`.
     Otherwise, the model_name is used to select the best model class.
     """
-    if model_class:
-        full_path = _MODEL_CLASS_MAPPING.get(model_class, model_class)
-        try:
-            module_name, class_name = full_path.rsplit(".", 1)
-            module = importlib.import_module(module_name)
-            return getattr(module, class_name)
-        except (ValueError, ImportError, AttributeError):
-            msg = f"Unknown model class: {model_class} (resolved to {full_path}, available: {_MODEL_CLASS_MAPPING})"
-            raise ValueError(msg)
+    # Dennis commented out to simplify config
+    # if model_class:
+    #     full_path = _MODEL_CLASS_MAPPING.get(model_class, model_class)
+    #     try:
+    #         module_name, class_name = full_path.rsplit(".", 1)
+    #         module = importlib.import_module(module_name)
+    #         return getattr(module, class_name)
+    #     except (ValueError, ImportError, AttributeError):
+    #         msg = f"Unknown model class: {model_class} (resolved to {full_path}, available: {_MODEL_CLASS_MAPPING})"
+    #         raise ValueError(msg)
 
     # Dennis commented this out since this code makes it impossible to use sonnet via vertex_ai
     # if any(s in model_name.lower() for s in ["anthropic", "sonnet", "opus", "claude"]):
