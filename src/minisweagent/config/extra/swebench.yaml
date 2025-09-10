@@ -194,3 +194,6 @@ environment:
 
 model:
   model_name: "vertex_ai/claude-sonnet-4"
+  model_kwargs:
+    drop_params: true
+    reasoning_effort: "high"
