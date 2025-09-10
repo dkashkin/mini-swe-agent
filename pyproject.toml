@@ -32,6 +32,7 @@ classifiers = [
 
 dependencies = [
     "google-genai",
+    "google-cloud-aiplatform",
     "pyyaml",
     "requests",
     "jinja2",
