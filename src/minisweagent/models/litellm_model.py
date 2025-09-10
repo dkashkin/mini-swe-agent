@@ -38,8 +38,9 @@ class LitellmModel:
         self.config = LitellmModelConfig(**kwargs)
         self.cost = 0.0
         self.n_calls = 0
-        if self.config.litellm_model_registry and Path(self.config.litellm_model_registry).is_file():
-            litellm.utils.register_model(json.loads(Path(self.config.litellm_model_registry).read_text()))
+        # Dennis commented out to simplify config
+        # if self.config.litellm_model_registry and Path(self.config.litellm_model_registry).is_file():
+        #     litellm.utils.register_model(json.loads(Path(self.config.litellm_model_registry).read_text()))
 
     @retry(
         stop=stop_after_attempt(20),
@@ -59,7 +60,7 @@ class LitellmModel:
     )
     def _query(self, messages: list[dict[str, str]], **kwargs):
         try:
-            # litellm._turn_on_debug()
+            litellm._turn_on_debug()
             return litellm.completion(
                 model=self.config.model_name, messages=messages, **(self.config.model_kwargs | kwargs)
             )
