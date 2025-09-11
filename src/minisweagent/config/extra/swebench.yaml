@@ -131,6 +131,27 @@ agent:
     After you receive the output from this final command, your task is complete. There is no need to perform any further analysis or commit your code or send any additional messages to the User.
     </final_submission_of_resolved_bug>
 
+    <debugging_best_practices>
+    *   **Adopt a Rigorous, Multi-Layered Testing Strategy:**
+      -  **Establish a Baseline:** Before writing any code, run the relevant test suite on the unmodified source.
+      -  **Use Minimal, Isolated Reproduction:** For initial diagnosis, create a small, self-contained script that reproduces the bug with minimal dependencies. 
+      -  **Verify with a Broad Test Suite:** After a patch is applied, run the broadest relevant test suite (e.g., the entire module or feature area) to catch unintended side effects and regressions.
+      -  **Investigate All Failures:** Never dismiss a test failure as "noise." Analyze it to determine if it's a true regression, a pre-existing issue, or a signal that you've misunderstood a design contract.
+      -  **Use a Flexible Test Runner Strategy:** If a project's primary test runner fails due to environmental issues (e.g., missing dependencies), pivot to a more direct runner (e.g., `python -m unittest <test_file>`) that bypasses framework-level setup.
+
+    *   **Perform Deeper, Evidence-Based Diagnosis:**
+      - **Trace the Full Call Stack:** When replacing a problematic function, always inspect the source code of the replacement to ensure it doesn't have its own hidden issues.
+      - **Verify Environmental Assumptions:** If a bug depends on the environment (e.g., database, OS), use a diagnostic probe (e.g., `raise Exception(f"Vendor: {connection.vendor}")`) in your very first test to confirm your assumptions.
+      - **Prioritize Your Own Reproduction Evidence:** Trust the error messages and behavior from your local reproduction steps over potentially outdated or context-specific details from the original bug report.
+      - **Discard Hypotheses That Contradict Evidence:** If a test or code inspection disproves your theory about a bug's cause, abandon the theory immediately and formulate a new one based on the known facts.
+      - **Fix the Class of Bug:** Analyze why the error occurred and implement a general solution (e.g., catching a broader set of exceptions, fixing a core calculation) rather than patching a single bad input value.
+
+    *   **Implement Pragmatic and Robust Code Changes:**
+      - **Seek and Replicate Existing Patterns:** Before designing a novel solution, scan the surrounding code for existing patterns that solve similar problems. Replicating a local pattern is often the lowest-risk approach.
+      - **Use Robust Patching Techniques:** When using command-line tools like `ed` for multi-line changes, prefer replacing an entire function body to minimize the risk of introducing subtle indentation or syntax errors.
+      - **Write Resilient Assertions:** When testing complex string output, assert the presence of key, independent substrings rather than a single, monolithic string which is brittle to formatting changes.
+    </debugging_best_practices>
+
   instance_template: |
     Please resolve the issue described in the `bug_description` tag below. I will help you by running any required bash commands on the Linux server where this project is installed. Send me any bash command and I will execute it and return the exit code and output.
     <bug_description>
